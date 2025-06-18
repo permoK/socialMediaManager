@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useState, Suspense } from 'react'
 import { useAuth } from '@/contexts/AuthContext'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { useYouTubeData } from '@/hooks/useYouTubeData'
@@ -28,41 +28,22 @@ import {
   ArrowLeft
 } from 'lucide-react'
 
-export default function YouTubePlatformPage() {
-  const { user, loading: authLoading } = useAuth()
-  const router = useRouter()
+// Component that handles search parameters
+function SearchParamsHandler({
+  setError,
+  setSuccess,
+  user,
+  router,
+  handleOAuthCallback
+}: {
+  setError: (error: string | null) => void
+  setSuccess: (success: string | null) => void
+  user: any
+  router: any
+  handleOAuthCallback: (code: string, state: string) => void
+}) {
   const searchParams = useSearchParams()
 
-  const {
-    isConnected,
-    checkingConnection,
-    channelData,
-    channelLoading,
-    channelError,
-    videos,
-    videosLoading,
-    videosError,
-    hasMoreVideos,
-    analyticsData,
-    analyticsLoading,
-    analyticsError,
-    connectYouTube,
-    refreshChannelData,
-    loadMoreVideos,
-    refreshAnalytics,
-  } = useYouTubeData()
-
-  const [success, setSuccess] = useState<string | null>(null)
-  const [error, setError] = useState<string | null>(null)
-
-  // Redirect to auth if not authenticated
-  useEffect(() => {
-    if (!authLoading && !user) {
-      router.push('/auth')
-    }
-  }, [user, authLoading, router])
-
-  // Handle OAuth callback
   useEffect(() => {
     const code = searchParams.get('code')
     const state = searchParams.get('state')
@@ -78,12 +59,22 @@ export default function YouTubePlatformPage() {
     if (code && state && user) {
       handleOAuthCallback(code, state)
     }
-  }, [searchParams, user, router])
+  }, [searchParams, user, router, setError, handleOAuthCallback])
 
-  const handleOAuthCallback = async (code: string, state: string) => {
+  return null
+}
+
+// OAuth callback handler function
+const createOAuthCallbackHandler = (
+  setError: (error: string | null) => void,
+  setSuccess: (success: string | null) => void,
+  user: any,
+  router: any
+) => {
+  return async (code: string, state: string) => {
     try {
       setError(null)
-      
+
       // Verify state matches user ID for security
       if (state !== user?.id) {
         throw new Error('Invalid state parameter')
@@ -116,6 +107,43 @@ export default function YouTubePlatformPage() {
       router.replace('/platforms/youtube')
     }
   }
+}
+
+export default function YouTubePlatformPage() {
+  const { user, loading: authLoading } = useAuth()
+  const router = useRouter()
+
+  const {
+    isConnected,
+    checkingConnection,
+    channelData,
+    channelLoading,
+    channelError,
+    videos,
+    videosLoading,
+    videosError,
+    hasMoreVideos,
+    analyticsData,
+    analyticsLoading,
+    analyticsError,
+    connectYouTube,
+    refreshChannelData,
+    loadMoreVideos,
+    refreshAnalytics,
+  } = useYouTubeData()
+
+  const [success, setSuccess] = useState<string | null>(null)
+  const [error, setError] = useState<string | null>(null)
+
+  // Redirect to auth if not authenticated
+  useEffect(() => {
+    if (!authLoading && !user) {
+      router.push('/auth')
+    }
+  }, [user, authLoading, router])
+
+  // Create OAuth callback handler
+  const handleOAuthCallback = createOAuthCallbackHandler(setError, setSuccess, user, router)
 
   const handleYouTubeConnect = async () => {
     try {
@@ -141,6 +169,17 @@ export default function YouTubePlatformPage() {
 
   return (
     <div className="p-6">
+      {/* Handle search parameters with Suspense boundary */}
+      <Suspense fallback={null}>
+        <SearchParamsHandler
+          setError={setError}
+          setSuccess={setSuccess}
+          user={user}
+          router={router}
+          handleOAuthCallback={handleOAuthCallback}
+        />
+      </Suspense>
+
       <div className="max-w-7xl mx-auto">
         <div className="mb-8">
           <div className="flex items-center space-x-3 mb-4">

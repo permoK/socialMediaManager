@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useState, Suspense } from 'react'
 import { useAuth } from '@/contexts/AuthContext'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { useYouTubeData } from '@/hooks/useYouTubeData'
@@ -25,10 +25,28 @@ import {
   Youtube
 } from 'lucide-react'
 
+// Component that handles search parameters
+function SearchParamsHandler({ setError, setSuccess }: { setError: (error: string | null) => void, setSuccess: (success: string | null) => void }) {
+  const searchParams = useSearchParams()
+
+  useEffect(() => {
+    const errorParam = searchParams.get('error')
+    const successParam = searchParams.get('success')
+
+    if (errorParam) {
+      setError(decodeURIComponent(errorParam))
+    }
+    if (successParam) {
+      setSuccess(decodeURIComponent(successParam))
+    }
+  }, [searchParams, setError, setSuccess])
+
+  return null
+}
+
 export default function DashboardPage() {
   const { user, loading: authLoading } = useAuth()
   const router = useRouter()
-  const searchParams = useSearchParams()
 
   const {
     isConnected,
@@ -51,19 +69,6 @@ export default function DashboardPage() {
 
   const [error, setError] = useState<string | null>(null)
   const [success, setSuccess] = useState<string | null>(null)
-
-  // Handle URL parameters for success/error messages
-  useEffect(() => {
-    const errorParam = searchParams.get('error')
-    const successParam = searchParams.get('success')
-
-    if (errorParam) {
-      setError(decodeURIComponent(errorParam))
-    }
-    if (successParam) {
-      setSuccess(decodeURIComponent(successParam))
-    }
-  }, [searchParams])
 
   // Redirect to platforms page (new main dashboard)
   useEffect(() => {
@@ -114,6 +119,11 @@ export default function DashboardPage() {
 
   return (
     <div className="min-h-screen bg-gray-50">
+      {/* Handle search parameters with Suspense boundary */}
+      <Suspense fallback={null}>
+        <SearchParamsHandler setError={setError} setSuccess={setSuccess} />
+      </Suspense>
+
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="mb-8">
           <div className="flex items-center space-x-3 mb-4">
