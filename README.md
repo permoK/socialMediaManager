@@ -1,25 +1,25 @@
-# YouTube Analytics Dashboard
+# SocialHub - Social Media Management Platform
 
-A comprehensive YouTube analytics dashboard built with Next.js, Supabase, and Google OAuth 2.0. Track your YouTube channel's performance, view detailed analytics, and monitor your growth over time.
+A comprehensive social media management platform built with Next.js, Supabase, and OAuth 2.0 integrations. Manage YouTube, Twitter, Instagram, TikTok, and more from a single unified dashboard.
 
 ## Features
 
-- 🔐 **Dual Authentication System**
+- 🔐 **Secure Authentication System**
   - Supabase email/password authentication for app access
-  - Google OAuth 2.0 for YouTube data access
+  - OAuth 2.0 integrations for multiple social media platforms
 
-- 📊 **Comprehensive Analytics**
-  - Channel statistics and subscriber count
-  - Video performance metrics
-  - Watch time and engagement analytics
-  - Views over time charts
-  - Subscriber growth tracking
+- 📊 **Multi-Platform Analytics**
+  - YouTube: Channel statistics, video performance, watch time analytics
+  - Twitter: Tweet engagement, follower growth, reach metrics
+  - Instagram: Post performance, story analytics, follower insights
+  - More platforms coming soon (TikTok, LinkedIn, Facebook)
 
 - 🎨 **Modern UI/UX**
   - Responsive design with Tailwind CSS
   - Interactive charts with Recharts
   - Smooth animations with Framer Motion
   - Clean, professional interface
+  - Unified platform switching
 
 - 🔄 **Real-time Data**
   - Automatic token refresh
@@ -31,9 +31,9 @@ A comprehensive YouTube analytics dashboard built with Next.js, Supabase, and Go
 - **Frontend**: Next.js 15, React 19, TypeScript
 - **Styling**: Tailwind CSS, Framer Motion
 - **Charts**: Recharts
-- **Authentication**: Supabase Auth + Google OAuth 2.0
+- **Authentication**: Supabase Auth + Multiple OAuth 2.0 providers
 - **Database**: Supabase (PostgreSQL)
-- **APIs**: YouTube Data API v3, YouTube Analytics API
+- **APIs**: YouTube Data API v3, YouTube Analytics API, Twitter API v2, Instagram Basic Display API
 
 ## Prerequisites
 

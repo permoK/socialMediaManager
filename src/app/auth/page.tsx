@@ -10,10 +10,10 @@ export default function AuthPage() {
   const { user, loading } = useAuth()
   const router = useRouter()
 
-  // Redirect to dashboard if already authenticated
+  // Redirect to platforms if already authenticated
   useEffect(() => {
     if (!loading && user) {
-      router.push('/dashboard')
+      router.push('/platforms')
     }
   }, [user, loading, router])
 

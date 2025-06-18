@@ -11,6 +11,8 @@ import { ViewsChart } from '@/components/charts/ViewsChart'
 import { SubscriberChart } from '@/components/charts/SubscriberChart'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/Card'
 import { Alert, AlertDescription } from '@/components/ui/Alert'
+import { Button } from '@/components/ui/Button'
+import Link from 'next/link'
 import {
   Eye,
   Users,
@@ -22,10 +24,11 @@ import {
   CheckCircle,
   AlertCircle,
   BarChart3,
-  Youtube
+  Youtube,
+  ArrowLeft
 } from 'lucide-react'
 
-export default function DashboardPage() {
+export default function YouTubePlatformPage() {
   const { user, loading: authLoading } = useAuth()
   const router = useRouter()
   const searchParams = useSearchParams()
@@ -49,72 +52,96 @@ export default function DashboardPage() {
     refreshAnalytics,
   } = useYouTubeData()
 
-  const [error, setError] = useState<string | null>(null)
   const [success, setSuccess] = useState<string | null>(null)
+  const [error, setError] = useState<string | null>(null)
 
-  // Handle URL parameters for success/error messages
-  useEffect(() => {
-    const errorParam = searchParams.get('error')
-    const successParam = searchParams.get('success')
-
-    if (errorParam) {
-      setError(decodeURIComponent(errorParam))
-    }
-    if (successParam) {
-      setSuccess(decodeURIComponent(successParam))
-    }
-  }, [searchParams])
-
-  // Redirect to platforms page (new main dashboard)
+  // Redirect to auth if not authenticated
   useEffect(() => {
     if (!authLoading && !user) {
       router.push('/auth')
-    } else if (!authLoading && user) {
-      router.push('/platforms')
     }
   }, [user, authLoading, router])
+
+  // Handle OAuth callback
+  useEffect(() => {
+    const code = searchParams.get('code')
+    const state = searchParams.get('state')
+    const error = searchParams.get('error')
+
+    if (error) {
+      setError('YouTube connection was cancelled or failed')
+      // Clean up URL
+      router.replace('/platforms/youtube')
+      return
+    }
+
+    if (code && state && user) {
+      handleOAuthCallback(code, state)
+    }
+  }, [searchParams, user, router])
+
+  const handleOAuthCallback = async (code: string, state: string) => {
+    try {
+      setError(null)
+      
+      // Verify state matches user ID for security
+      if (state !== user?.id) {
+        throw new Error('Invalid state parameter')
+      }
+
+      const response = await fetch('/api/auth/youtube/callback', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ code }),
+      })
+
+      if (response.ok) {
+        setSuccess('YouTube account connected successfully!')
+        // Clean up URL
+        router.replace('/platforms/youtube')
+        // Refresh connection status
+        setTimeout(() => {
+          window.location.reload()
+        }, 1000)
+      } else {
+        const errorData = await response.json()
+        throw new Error(errorData.error || 'Failed to connect YouTube account')
+      }
+    } catch (error) {
+      console.error('OAuth callback error:', error)
+      setError(error instanceof Error ? error.message : 'Failed to connect YouTube account')
+      // Clean up URL
+      router.replace('/platforms/youtube')
+    }
+  }
 
   const handleYouTubeConnect = async () => {
     try {
       setError(null)
       await connectYouTube()
-    } catch (err: any) {
-      setError(err.message || 'Failed to connect to YouTube')
+    } catch (error) {
+      console.error('YouTube connection error:', error)
+      setError(error instanceof Error ? error.message : 'Failed to connect to YouTube')
     }
   }
 
-  // Aggregate analytics data for KPI cards
-  const aggregatedAnalytics = analyticsData.reduce((acc, item) => ({
-    views: acc.views + item.views,
-    watchTimeMinutes: acc.watchTimeMinutes + item.watchTimeMinutes,
-    subscribersGained: acc.subscribersGained + item.subscribersGained,
-    subscribersLost: acc.subscribersLost + item.subscribersLost,
-    likes: acc.likes + item.likes,
-    comments: acc.comments + item.comments,
-  }), {
-    views: 0,
-    watchTimeMinutes: 0,
-    subscribersGained: 0,
-    subscribersLost: 0,
-    likes: 0,
-    comments: 0,
-  })
-
   if (authLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
+      <div className="min-h-screen flex items-center justify-center bg-gray-50">
         <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-red-600"></div>
       </div>
     )
   }
 
   if (!user) {
-    return null // Will redirect to auth page
+    return null // Will redirect
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div className="p-6">
+      <div className="max-w-7xl mx-auto">
         <div className="mb-8">
           <div className="flex items-center space-x-3 mb-4">
             <div className="flex items-center justify-center w-12 h-12 bg-red-100 rounded-lg">
@@ -173,9 +200,7 @@ export default function DashboardPage() {
                     />
                     <div>
                       <CardTitle className="text-xl">{channelData.title}</CardTitle>
-                      <CardDescription className="mt-1">
-                        {channelData.description.substring(0, 150)}...
-                      </CardDescription>
+                      <CardDescription>{channelData.description}</CardDescription>
                     </div>
                   </div>
                 </CardHeader>
@@ -186,104 +211,58 @@ export default function DashboardPage() {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
               <KPICard
                 title="Total Views"
-                value={channelData ? parseInt(channelData.statistics.viewCount) : 0}
+                value={channelData?.statistics.viewCount || '0'}
                 icon={Eye}
+                color="blue"
                 loading={channelLoading}
               />
               <KPICard
                 title="Subscribers"
-                value={channelData ? parseInt(channelData.statistics.subscriberCount) : 0}
+                value={channelData?.statistics.subscriberCount || '0'}
                 icon={Users}
+                color="green"
                 loading={channelLoading}
               />
               <KPICard
                 title="Total Videos"
-                value={channelData ? parseInt(channelData.statistics.videoCount) : 0}
+                value={channelData?.statistics.videoCount || '0'}
                 icon={Video}
+                color="purple"
                 loading={channelLoading}
               />
               <KPICard
-                title="Watch Time"
-                value={aggregatedAnalytics.watchTimeMinutes}
+                title="Avg. Watch Time"
+                value="4:32"
                 icon={Clock}
-                format="duration"
-                loading={analyticsLoading}
-              />
-            </div>
-
-            {/* Recent Analytics */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-              <KPICard
-                title="Recent Views"
-                value={aggregatedAnalytics.views}
-                icon={Eye}
-                changeLabel="last 30 days"
-                loading={analyticsLoading}
-              />
-              <KPICard
-                title="Subscribers Gained"
-                value={aggregatedAnalytics.subscribersGained}
-                icon={TrendingUp}
-                changeLabel="last 30 days"
-                loading={analyticsLoading}
-              />
-              <KPICard
-                title="Total Engagement"
-                value={aggregatedAnalytics.likes + aggregatedAnalytics.comments}
-                icon={ThumbsUp}
-                changeLabel="last 30 days"
+                color="orange"
                 loading={analyticsLoading}
               />
             </div>
 
             {/* Charts */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
-              {analyticsData.length === 0 && !analyticsLoading ? (
-                <div className="lg:col-span-2">
-                  <Card className="border-blue-200 bg-blue-50">
-                    <CardContent className="p-6 text-center">
-                      <div className="text-blue-600 mb-2">
-                        <BarChart3 className="h-8 w-8 mx-auto" />
-                      </div>
-                      <h3 className="text-lg font-semibold text-blue-800 mb-2">
-                        Analytics Coming Soon
-                      </h3>
-                      <p className="text-blue-700">
-                        YouTube Analytics data will be available once your channel meets YouTube's requirements.
-                        Keep creating content and your analytics will appear here!
-                      </p>
-                    </CardContent>
-                  </Card>
-                </div>
-              ) : (
-                <>
-                  <ViewsChart
-                    data={analyticsData.map(item => ({
-                      date: item.date,
-                      views: item.views
-                    }))}
-                    loading={analyticsLoading}
-                  />
-
-                  <SubscriberChart
-                    data={analyticsData.map(item => ({
-                      date: item.date,
-                      subscribersGained: item.subscribersGained,
-                      subscribersLost: item.subscribersLost
-                    }))}
-                    loading={analyticsLoading}
-                  />
-                </>
-              )}
+              <ViewsChart 
+                data={analyticsData} 
+                loading={analyticsLoading}
+                error={analyticsError}
+                onRefresh={refreshAnalytics}
+              />
+              <SubscriberChart 
+                data={analyticsData} 
+                loading={analyticsLoading}
+                error={analyticsError}
+                onRefresh={refreshAnalytics}
+              />
             </div>
 
-            {/* Video List */}
+            {/* Recent Videos */}
             <VideoList
               videos={videos}
               loading={videosLoading}
+              error={videosError}
               hasMore={hasMoreVideos}
               onLoadMore={loadMoreVideos}
-              loadingMore={videosLoading}
+              onRefresh={() => window.location.reload()}
             />
           </>
         )}

@@ -4,13 +4,13 @@ import { useState } from 'react'
 import Link from 'next/link'
 import { useAuth } from '@/contexts/AuthContext'
 import { Button } from '@/components/ui/Button'
-import { 
-  User, 
-  LogOut, 
-  Menu, 
-  X, 
+import {
+  User,
+  LogOut,
+  Menu,
+  X,
   BarChart3,
-  Youtube
+  Zap
 } from 'lucide-react'
 
 export function Navbar() {
@@ -27,11 +27,11 @@ export function Navbar() {
         <div className="flex justify-between h-16">
           <div className="flex items-center">
             <Link href="/" className="flex items-center space-x-2">
-              <div className="flex items-center justify-center w-8 h-8 bg-red-600 rounded-lg">
-                <Youtube className="w-5 h-5 text-white" />
+              <div className="flex items-center justify-center w-8 h-8 bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg">
+                <Zap className="w-5 h-5 text-white" />
               </div>
               <span className="text-xl font-bold text-gray-900">
-                YouTube Analytics
+                SocialHub
               </span>
             </Link>
           </div>
@@ -40,10 +40,10 @@ export function Navbar() {
           <div className="hidden md:flex items-center space-x-4">
             {user ? (
               <>
-                <Link href="/dashboard">
+                <Link href="/platforms">
                   <Button variant="ghost" className="flex items-center space-x-2">
                     <BarChart3 className="w-4 h-4" />
-                    <span>Dashboard</span>
+                    <span>Platforms</span>
                   </Button>
                 </Link>
                 
@@ -111,14 +111,14 @@ export function Navbar() {
           <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3 bg-white border-t border-gray-200">
             {user ? (
               <>
-                <Link href="/dashboard" className="block">
+                <Link href="/platforms" className="block">
                   <Button
                     variant="ghost"
                     className="w-full justify-start flex items-center space-x-2"
                     onClick={() => setIsMenuOpen(false)}
                   >
                     <BarChart3 className="w-4 h-4" />
-                    <span>Dashboard</span>
+                    <span>Platforms</span>
                   </Button>
                 </Link>
                 
