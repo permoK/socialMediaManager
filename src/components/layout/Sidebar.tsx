@@ -62,10 +62,11 @@ export function Sidebar({ isCollapsed = false, onToggle }: SidebarProps) {
       initial={false}
       animate={isCollapsed ? 'collapsed' : 'expanded'}
       variants={sidebarVariants}
-      className="bg-white border-r border-gray-200 flex flex-col h-full"
+      className="border-r flex flex-col h-full"
+      style={{ backgroundColor: 'var(--card)', borderColor: 'var(--border)' }}
     >
       {/* Header */}
-      <div className="p-4 border-b border-gray-200">
+      <div className="p-4 border-b" style={{ borderColor: 'var(--border)' }}>
         <div className="flex items-center justify-between">
           <AnimatePresence mode="wait">
             {!isCollapsed && (
@@ -79,7 +80,7 @@ export function Sidebar({ isCollapsed = false, onToggle }: SidebarProps) {
                 <div className="flex items-center justify-center w-8 h-8 bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg">
                   <Zap className="w-5 h-5 text-white" />
                 </div>
-                <span className="text-lg font-bold text-gray-900">SocialHub</span>
+                <span className="text-lg font-bold" style={{ color: 'var(--foreground)' }}>SocialHub</span>
               </motion.div>
             )}
           </AnimatePresence>

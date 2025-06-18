@@ -12,12 +12,20 @@ const Alert = React.forwardRef<
     role="alert"
     className={cn(
       'relative w-full rounded-lg border p-4',
-      {
-        'bg-blue-50 text-blue-900 border-blue-200': variant === 'default',
-        'border-red-200 text-red-900 bg-red-50 [&>svg]:text-red-600': variant === 'destructive',
-      },
       className
     )}
+    style={{
+      ...(variant === 'default' && {
+        backgroundColor: 'var(--muted)',
+        color: 'var(--foreground)',
+        borderColor: 'var(--border)'
+      }),
+      ...(variant === 'destructive' && {
+        backgroundColor: 'var(--destructive)',
+        color: 'var(--destructive-foreground)',
+        borderColor: 'var(--destructive)'
+      })
+    }}
     {...props}
   />
 ))

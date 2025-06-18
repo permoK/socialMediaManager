@@ -61,10 +61,10 @@ export function AuthForm({ mode, onModeChange }: AuthFormProps) {
   return (
     <Card className="w-full max-w-md mx-auto">
       <CardHeader className="space-y-1">
-        <CardTitle className="text-2xl text-center text-gray-900">
+        <CardTitle className="text-2xl text-center">
           {mode === 'signup' ? 'Create an account' : 'Sign in to your account'}
         </CardTitle>
-        <CardDescription className="text-center text-gray-600">
+        <CardDescription className="text-center">
           {mode === 'signup'
             ? 'Enter your details to create your account'
             : 'Enter your email and password to sign in'
@@ -125,18 +125,18 @@ export function AuthForm({ mode, onModeChange }: AuthFormProps) {
 
           {!useMagicLink && (
             <div className="space-y-2">
-              <label htmlFor="password" className="text-sm font-medium text-gray-700">
+              <label htmlFor="password" className="text-sm font-medium" style={{ color: 'var(--foreground)' }}>
                 Password
               </label>
               <div className="relative">
-                <Lock className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
+                <Lock className="absolute left-3 top-3 h-4 w-4" style={{ color: 'var(--muted-foreground)' }} />
                 <Input
                   id="password"
                   type="password"
                   placeholder="Enter your password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="pl-10 bg-white text-gray-900 border-gray-300"
+                  className="pl-10"
                   required
                   minLength={6}
                 />

@@ -95,7 +95,7 @@ export function VideoList({
       <CardContent>
         <div className="space-y-4">
           {videos.map((video) => (
-            <div key={video.id} className="border rounded-lg p-4 hover:bg-gray-50 transition-colors">
+            <div key={video.id} className="border rounded-lg p-4 transition-colors" style={{ borderColor: 'var(--border)' }} onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'var(--muted)'} onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}>
               <div className="flex space-x-4">
                 {/* Thumbnail */}
                 <div className="flex-shrink-0">

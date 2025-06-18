@@ -16,8 +16,13 @@
   --destructive: #ef4444;
   --destructive-foreground: #ffffff;
   --border: #e5e7eb;
-  --input: #e5e7eb;
+  --input: #ffffff;
+  --input-border: #d1d5db;
   --ring: #dc2626;
+  --success: #10b981;
+  --success-foreground: #ffffff;
+  --warning: #f59e0b;
+  --warning-foreground: #ffffff;
 }
 
 @theme inline {
@@ -37,7 +42,12 @@
   --color-destructive-foreground: var(--destructive-foreground);
   --color-border: var(--border);
   --color-input: var(--input);
+  --color-input-border: var(--input-border);
   --color-ring: var(--ring);
+  --color-success: var(--success);
+  --color-success-foreground: var(--success-foreground);
+  --color-warning: var(--warning);
+  --color-warning-foreground: var(--warning-foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
@@ -59,8 +69,13 @@
     --destructive: #ef4444;
     --destructive-foreground: #ffffff;
     --border: #334155;
-    --input: #334155;
+    --input: #1e293b;
+    --input-border: #475569;
     --ring: #dc2626;
+    --success: #10b981;
+    --success-foreground: #ffffff;
+    --warning: #f59e0b;
+    --warning-foreground: #ffffff;
   }
 }
 
@@ -85,21 +100,22 @@ button {
   font-weight: 500;
 }
 
-/* Ensure form inputs have good contrast */
+/* Ensure form inputs have good contrast and adapt to theme */
 input, textarea, select {
-  color: #111827 !important;
-  background-color: #ffffff !important;
-  border-color: #d1d5db !important;
+  color: var(--foreground) !important;
+  background-color: var(--input) !important;
+  border-color: var(--input-border) !important;
 }
 
 input::placeholder, textarea::placeholder {
-  color: #6b7280 !important;
+  color: var(--muted-foreground) !important;
 }
 
-/* Force input text to be visible */
-input[type="email"], input[type="password"], input[type="text"] {
-  color: #111827 !important;
-  background-color: #ffffff !important;
+/* Force input text to be visible in both themes */
+input[type="email"], input[type="password"], input[type="text"], input[type="search"] {
+  color: var(--foreground) !important;
+  background-color: var(--input) !important;
+  border-color: var(--input-border) !important;
 }
 
 /* Improve link visibility */
@@ -111,3 +127,52 @@ a {
 a:hover {
   text-decoration: underline;
 }
+
+/* Ensure all text elements use theme-aware colors */
+.text-gray-900 {
+  color: var(--foreground) !important;
+}
+
+.text-gray-800 {
+  color: var(--foreground) !important;
+}
+
+.text-gray-700 {
+  color: var(--foreground) !important;
+}
+
+.text-gray-600 {
+  color: var(--muted-foreground) !important;
+}
+
+.text-gray-500 {
+  color: var(--muted-foreground) !important;
+}
+
+.text-gray-400 {
+  color: var(--muted-foreground) !important;
+}
+
+/* Background color overrides */
+.bg-white {
+  background-color: var(--card) !important;
+}
+
+.bg-gray-50 {
+  background-color: var(--muted) !important;
+}
+
+.bg-gray-100 {
+  background-color: var(--secondary) !important;
+}
+
+/* Border color overrides */
+.border-gray-200 {
+  border-color: var(--border) !important;
+}
+
+.border-gray-300 {
+  border-color: var(--input-border) !important;
+}
+
+

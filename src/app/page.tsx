@@ -4,7 +4,7 @@ import { Zap, BarChart3, Users, TrendingUp, Youtube, Twitter, Instagram, Video }
 
 export default function Home() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-purple-50 to-gray-100">
+    <div className="min-h-screen" style={{ background: 'var(--background)' }}>
       {/* Hero Section */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 pb-16">
         <div className="text-center">
@@ -14,12 +14,12 @@ export default function Home() {
             </div>
           </div>
 
-          <h1 className="text-4xl md:text-6xl font-bold text-gray-900 mb-6">
+          <h1 className="text-4xl md:text-6xl font-bold mb-6" style={{ color: 'var(--foreground)' }}>
             Social Media
             <span className="block bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">Management Platform</span>
           </h1>
 
-          <p className="text-xl text-gray-600 mb-8 max-w-3xl mx-auto">
+          <p className="text-xl mb-8 max-w-3xl mx-auto" style={{ color: 'var(--muted-foreground)' }}>
             Manage all your social media platforms in one place. Connect YouTube, Twitter, Instagram, TikTok, and more.
             Get comprehensive analytics, schedule content, and grow your audience across all platforms.
           </p>
@@ -42,10 +42,10 @@ export default function Home() {
       {/* Features Section */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
         <div className="text-center mb-16">
-          <h2 className="text-3xl font-bold text-gray-900 mb-4">
+          <h2 className="text-3xl font-bold mb-4" style={{ color: 'var(--foreground)' }}>
             Everything you need to manage your social media presence
           </h2>
-          <p className="text-lg text-gray-600">
+          <p className="text-lg" style={{ color: 'var(--muted-foreground)' }}>
             Powerful tools to help you grow across all social media platforms
           </p>
         </div>
@@ -57,10 +57,10 @@ export default function Home() {
                 <Youtube className="w-6 h-6 text-red-600" />
               </div>
             </div>
-            <h3 className="text-xl font-semibold text-gray-900 mb-2">
+            <h3 className="text-xl font-semibold mb-2" style={{ color: 'var(--foreground)' }}>
               YouTube Analytics
             </h3>
-            <p className="text-gray-600">
+            <p style={{ color: 'var(--muted-foreground)' }}>
               Track views, watch time, engagement rates, and revenue with comprehensive charts and metrics.
             </p>
           </div>
@@ -71,10 +71,10 @@ export default function Home() {
                 <Twitter className="w-6 h-6 text-blue-600" />
               </div>
             </div>
-            <h3 className="text-xl font-semibold text-gray-900 mb-2">
+            <h3 className="text-xl font-semibold mb-2" style={{ color: 'var(--foreground)' }}>
               Twitter Management
             </h3>
-            <p className="text-gray-600">
+            <p style={{ color: 'var(--muted-foreground)' }}>
               Schedule tweets, track engagement, and analyze your Twitter performance and growth.
             </p>
           </div>
@@ -85,10 +85,10 @@ export default function Home() {
                 <Instagram className="w-6 h-6 text-pink-600" />
               </div>
             </div>
-            <h3 className="text-xl font-semibold text-gray-900 mb-2">
+            <h3 className="text-xl font-semibold mb-2" style={{ color: 'var(--foreground)' }}>
               Instagram Insights
             </h3>
-            <p className="text-gray-600">
+            <p style={{ color: 'var(--muted-foreground)' }}>
               Monitor posts, stories, and reels performance. Track followers and engagement metrics.
             </p>
           </div>
@@ -99,10 +99,10 @@ export default function Home() {
                 <Video className="w-6 h-6 text-purple-600" />
               </div>
             </div>
-            <h3 className="text-xl font-semibold text-gray-900 mb-2">
+            <h3 className="text-xl font-semibold mb-2" style={{ color: 'var(--foreground)' }}>
               Multi-Platform
             </h3>
-            <p className="text-gray-600">
+            <p style={{ color: 'var(--muted-foreground)' }}>
               Unified dashboard for TikTok, LinkedIn, and other platforms. More integrations coming soon.
             </p>
           </div>

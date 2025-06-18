@@ -41,9 +41,9 @@ export function KPICard({
   }
 
   const getChangeColor = (change: number) => {
-    if (change > 0) return 'text-green-600'
-    if (change < 0) return 'text-red-600'
-    return 'text-gray-600'
+    if (change > 0) return '#10b981' // green-600
+    if (change < 0) return '#ef4444' // red-600
+    return 'var(--muted-foreground)'
   }
 
   const getChangeIcon = (change: number) => {
@@ -74,19 +74,19 @@ export function KPICard({
   return (
     <Card>
       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-        <CardTitle className="text-sm font-medium text-gray-600">
+        <CardTitle className="text-sm font-medium" style={{ color: 'var(--muted-foreground)' }}>
           {title}
         </CardTitle>
-        <Icon className="h-4 w-4 text-gray-500" />
+        <Icon className="h-4 w-4" style={{ color: 'var(--muted-foreground)' }} />
       </CardHeader>
       <CardContent>
-        <div className="text-2xl font-bold text-gray-900">{formatValue(value)}</div>
+        <div className="text-2xl font-bold" style={{ color: 'var(--card-foreground)' }}>{formatValue(value)}</div>
         {change !== undefined && (
-          <p className={`text-xs ${getChangeColor(change)} flex items-center mt-1`}>
+          <p className="text-xs flex items-center mt-1" style={{ color: getChangeColor(change) }}>
             <span className="mr-1">{getChangeIcon(change)}</span>
             {Math.abs(change).toFixed(1)}%
             {changeLabel && (
-              <span className="text-gray-500 ml-1">
+              <span className="ml-1" style={{ color: 'var(--muted-foreground)' }}>
                 {changeLabel}
               </span>
             )}

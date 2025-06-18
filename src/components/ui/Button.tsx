@@ -16,9 +16,9 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
           {
             'bg-red-600 text-white hover:bg-red-700 shadow-sm': variant === 'default',
             'bg-red-600 text-white hover:bg-red-700': variant === 'destructive',
-            'border border-gray-300 bg-white text-gray-900 hover:bg-gray-50 shadow-sm': variant === 'outline',
-            'bg-gray-100 text-gray-900 hover:bg-gray-200': variant === 'secondary',
-            'text-gray-900 hover:bg-gray-100 hover:text-gray-900': variant === 'ghost',
+            'border border-input-border bg-card text-card-foreground hover:bg-muted shadow-sm': variant === 'outline',
+            'bg-secondary text-secondary-foreground hover:bg-secondary/80': variant === 'secondary',
+            'text-card-foreground hover:bg-muted hover:text-card-foreground': variant === 'ghost',
             'text-red-600 underline-offset-4 hover:underline': variant === 'link',
           },
           {
@@ -29,6 +29,20 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
           },
           className
         )}
+        style={{
+          ...(variant === 'outline' && {
+            borderColor: 'var(--input-border)',
+            backgroundColor: 'var(--card)',
+            color: 'var(--card-foreground)'
+          }),
+          ...(variant === 'secondary' && {
+            backgroundColor: 'var(--secondary)',
+            color: 'var(--secondary-foreground)'
+          }),
+          ...(variant === 'ghost' && {
+            color: 'var(--card-foreground)'
+          })
+        }}
         ref={ref}
         {...props}
       />
