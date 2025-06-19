@@ -35,7 +35,7 @@ export function KPICard({
   useEffect(() => {
     if (loading || typeof value === 'string') return
 
-    const numericValue = typeof value === 'number' ? value : parseInt(value.toString().replace(/,/g, ''))
+    const numericValue = typeof value === 'number' ? value : parseInt(String(value).replace(/,/g, ''))
     if (isNaN(numericValue)) return
 
     setIsAnimating(true)

@@ -166,7 +166,7 @@ export default function DashboardPage() {
               isConnected={isConnected}
               onConnect={handleYouTubeConnect}
               loading={checkingConnection}
-              error={error}
+              error={error || undefined}
             />
           </div>
         ) : (

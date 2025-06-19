@@ -64,6 +64,7 @@ interface UseYouTubeDataReturn {
   
   // Actions
   connectYouTube: () => Promise<void>
+  checkConnection: () => Promise<void>
   refreshChannelData: () => Promise<void>
   loadMoreVideos: () => Promise<void>
   refreshAnalytics: (startDate?: string, endDate?: string) => Promise<void>
@@ -278,25 +279,26 @@ export function useYouTubeData(): UseYouTubeDataReturn {
     // Connection status
     isConnected,
     checkingConnection,
-    
+
     // Channel data
     channelData,
     channelLoading,
     channelError,
-    
+
     // Videos data
     videos,
     videosLoading,
     videosError,
     hasMoreVideos,
-    
+
     // Analytics data
     analyticsData,
     analyticsLoading,
     analyticsError,
-    
+
     // Actions
     connectYouTube,
+    checkConnection,
     refreshChannelData,
     loadMoreVideos,
     refreshAnalytics,

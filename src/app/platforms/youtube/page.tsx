@@ -80,7 +80,8 @@ const createOAuthCallbackHandler = (
   setError: (error: string | null) => void,
   setSuccess: (success: string | null) => void,
   user: any,
-  router: any
+  router: any,
+  refreshConnection: () => void
 ) => {
   return async (code: string, state: string) => {
     try {
@@ -103,10 +104,8 @@ const createOAuthCallbackHandler = (
         setSuccess('YouTube account connected successfully!')
         // Clean up URL
         router.replace('/platforms/youtube')
-        // Refresh connection status
-        setTimeout(() => {
-          window.location.reload()
-        }, 1000)
+        // Refresh connection status immediately without page reload
+        refreshConnection()
       } else {
         const errorData = await response.json()
         throw new Error(errorData.error || 'Failed to connect YouTube account')
@@ -138,6 +137,7 @@ export default function YouTubePlatformPage() {
     analyticsLoading,
     analyticsError,
     connectYouTube,
+    checkConnection,
     refreshChannelData,
     loadMoreVideos,
     refreshAnalytics,
@@ -157,7 +157,7 @@ export default function YouTubePlatformPage() {
   }, [user, authLoading, router])
 
   // Create OAuth callback handler
-  const handleOAuthCallback = createOAuthCallbackHandler(setError, setSuccess, user, router)
+  const handleOAuthCallback = createOAuthCallbackHandler(setError, setSuccess, user, router, checkConnection)
 
   const handleYouTubeConnect = async () => {
     try {
@@ -415,7 +415,7 @@ export default function YouTubePlatformPage() {
               isConnected={isConnected}
               onConnect={handleYouTubeConnect}
               loading={checkingConnection}
-              error={error}
+              error={error || undefined}
             />
           </motion.div>
         ) : (
@@ -601,7 +601,7 @@ export default function YouTubePlatformPage() {
                 <ViewsChart
                   data={analyticsData}
                   loading={analyticsLoading}
-                  error={analyticsError}
+                  error={analyticsError || undefined}
                   onRefresh={refreshAnalytics}
                 />
               </motion.div>
@@ -613,7 +613,7 @@ export default function YouTubePlatformPage() {
                 <SubscriberChart
                   data={analyticsData}
                   loading={analyticsLoading}
-                  error={analyticsError}
+                  error={analyticsError || undefined}
                   onRefresh={refreshAnalytics}
                 />
               </motion.div>
@@ -628,7 +628,7 @@ export default function YouTubePlatformPage() {
               <VideoList
                 videos={videos}
                 loading={videosLoading}
-                error={videosError}
+                error={videosError || undefined}
                 hasMore={hasMoreVideos}
                 onLoadMore={loadMoreVideos}
                 onRefresh={() => window.location.reload()}
