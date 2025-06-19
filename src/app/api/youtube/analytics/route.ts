@@ -18,16 +18,16 @@ export async function GET(request: NextRequest) {
     const supabase = await createServerComponentClient()
 
     // Check if user is authenticated
-    const { data: { session }, error: sessionError } = await supabase.auth.getSession()
-    
-    if (sessionError || !session) {
+    const { data: { user }, error: userError } = await supabase.auth.getUser()
+
+    if (userError || !user) {
       return NextResponse.json(
         { error: 'Unauthorized' },
         { status: 401 }
       )
     }
 
-    const youtubeClient = new YouTubeAPIClient(session.user.id)
+    const youtubeClient = new YouTubeAPIClient(user.id)
     
     // Check if user has valid YouTube access
     const hasAccess = await youtubeClient.hasValidAccess()
@@ -59,7 +59,7 @@ export async function GET(request: NextRequest) {
     } catch (error: any) {
       if (error.response?.status === 403) {
         // Analytics not available for this channel (common for new/small channels)
-        console.warn('YouTube Analytics not available for channel:', channelInfo.id)
+        // Don't log this as it's expected for many channels
         return NextResponse.json({
           data: [],
           message: 'Analytics not available for this channel'
@@ -71,7 +71,7 @@ export async function GET(request: NextRequest) {
     // Store analytics data in database
     if (analyticsData.length > 0) {
       const analyticsRecords = analyticsData.map(data => ({
-        user_id: session.user.id,
+        user_id: user.id,
         channel_id: channelInfo.id,
         date: data.date,
         views: data.views || 0,
@@ -89,7 +89,10 @@ export async function GET(request: NextRequest) {
         .upsert(analyticsRecords, { onConflict: 'user_id,channel_id,date' })
 
       if (insertError) {
-        console.error('Error storing analytics data:', insertError)
+        // Only log if it's not a duplicate key constraint (which is expected)
+        if (insertError.code !== '23505') {
+          console.error('Error storing analytics data:', insertError)
+        }
       }
     }
 

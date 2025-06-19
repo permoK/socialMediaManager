@@ -7,16 +7,16 @@ export async function GET(request: NextRequest) {
     const supabase = await createServerComponentClient()
 
     // Check if user is authenticated
-    const { data: { session }, error: sessionError } = await supabase.auth.getSession()
-    
-    if (sessionError || !session) {
+    const { data: { user }, error: userError } = await supabase.auth.getUser()
+
+    if (userError || !user) {
       return NextResponse.json(
         { error: 'Unauthorized' },
         { status: 401 }
       )
     }
 
-    const youtubeClient = new YouTubeAPIClient(session.user.id)
+    const youtubeClient = new YouTubeAPIClient(user.id)
     
     // Check if user has valid YouTube access
     const hasAccess = await youtubeClient.hasValidAccess()
@@ -41,7 +41,7 @@ export async function GET(request: NextRequest) {
     const { error: updateError } = await supabase
       .from('youtube_channels')
       .upsert({
-        user_id: session.user.id,
+        user_id: user.id,
         channel_id: channelInfo.id,
         channel_title: channelInfo.title,
         channel_description: channelInfo.description,
@@ -52,7 +52,10 @@ export async function GET(request: NextRequest) {
       })
 
     if (updateError) {
-      console.error('Error updating channel info:', updateError)
+      // Only log if it's not a duplicate key constraint (which is expected)
+      if (updateError.code !== '23505') {
+        console.error('Error updating channel info:', updateError)
+      }
     }
 
     return NextResponse.json({ channel: channelInfo })

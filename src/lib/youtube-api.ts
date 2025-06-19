@@ -69,18 +69,26 @@ export class YouTubeAPIClient {
   constructor(userId: string) {
     this.userId = userId
     this.auth = new YouTubeAuth()
-    
+
     this.api = axios.create({
       baseURL: 'https://www.googleapis.com/youtube/v3',
       timeout: 30000,
     })
 
-    // Add request interceptor to include access token
+    // Add request interceptor to include access token and API key
     this.api.interceptors.request.use(async (config) => {
+      // Always include API key
+      const apiKey = process.env.YOUTUBE_API_KEY || process.env.NEXT_PUBLIC_YOUTUBE_API_KEY
+      if (apiKey) {
+        config.params = { ...config.params, key: apiKey }
+      }
+
+      // Include access token for authenticated requests
       const accessToken = await this.auth.getValidAccessToken(this.userId)
       if (accessToken) {
         config.headers.Authorization = `Bearer ${accessToken}`
       }
+
       return config
     })
 
@@ -318,8 +326,11 @@ export class YouTubeAPIClient {
 
         return data as YouTubeAnalyticsData
       })
-    } catch (error) {
-      console.error('Error fetching analytics data:', error)
+    } catch (error: any) {
+      // Don't log 403 errors as they're expected for many channels
+      if (error.response?.status !== 403) {
+        console.error('Error fetching analytics data:', error)
+      }
       throw error
     }
   }
