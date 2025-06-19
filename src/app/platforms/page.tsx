@@ -131,8 +131,8 @@ export default function PlatformsPage() {
 
   if (authLoading || platformsLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
-        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-600"></div>
+      <div className="min-h-screen flex items-center justify-center" style={{ backgroundColor: 'var(--muted)' }}>
+        <div className="animate-spin rounded-full h-32 w-32 border-b-2" style={{ borderColor: 'var(--primary)' }}></div>
       </div>
     )
   }
@@ -146,7 +146,7 @@ export default function PlatformsPage() {
   const totalFollowers = getTotalFollowers()
 
   return (
-    <div className="p-6">
+    <div className="p-6" style={{ background: 'linear-gradient(to bottom right, var(--muted), var(--secondary))' }}>
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <motion.div
@@ -154,8 +154,8 @@ export default function PlatformsPage() {
           animate={{ opacity: 1, y: 0 }}
           className="mb-8"
         >
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">Platform Overview</h1>
-          <p className="text-gray-600">
+          <h1 className="text-3xl font-bold mb-2" style={{ color: 'var(--foreground)' }}>Platform Overview</h1>
+          <p style={{ color: 'var(--muted-foreground)' }}>
             Connect and manage all your social media accounts in one place
           </p>
         </motion.div>
@@ -178,12 +178,12 @@ export default function PlatformsPage() {
           <Card>
             <CardContent className="p-6">
               <div className="flex items-center">
-                <div className="flex items-center justify-center w-10 h-10 bg-green-100 rounded-lg">
-                  <CheckCircle className="w-5 h-5 text-green-600" />
+                <div className="flex items-center justify-center w-10 h-10 rounded-lg" style={{ backgroundColor: 'var(--success)' }}>
+                  <CheckCircle className="w-5 h-5" style={{ color: 'var(--success-foreground)' }} />
                 </div>
                 <div className="ml-4">
-                  <p className="text-sm font-medium text-gray-600">Connected</p>
-                  <p className="text-2xl font-bold text-gray-900">{connectedPlatforms.length}</p>
+                  <p className="text-sm font-medium" style={{ color: 'var(--muted-foreground)' }}>Connected</p>
+                  <p className="text-2xl font-bold" style={{ color: 'var(--foreground)' }}>{connectedPlatforms.length}</p>
                 </div>
               </div>
             </CardContent>
@@ -192,12 +192,12 @@ export default function PlatformsPage() {
           <Card>
             <CardContent className="p-6">
               <div className="flex items-center">
-                <div className="flex items-center justify-center w-10 h-10 bg-blue-100 rounded-lg">
-                  <Plus className="w-5 h-5 text-blue-600" />
+                <div className="flex items-center justify-center w-10 h-10 rounded-lg" style={{ backgroundColor: 'var(--primary)' }}>
+                  <Plus className="w-5 h-5" style={{ color: 'var(--primary-foreground)' }} />
                 </div>
                 <div className="ml-4">
-                  <p className="text-sm font-medium text-gray-600">Available</p>
-                  <p className="text-2xl font-bold text-gray-900">{availablePlatforms.length}</p>
+                  <p className="text-sm font-medium" style={{ color: 'var(--muted-foreground)' }}>Available</p>
+                  <p className="text-2xl font-bold" style={{ color: 'var(--foreground)' }}>{availablePlatforms.length}</p>
                 </div>
               </div>
             </CardContent>
@@ -206,12 +206,12 @@ export default function PlatformsPage() {
           <Card>
             <CardContent className="p-6">
               <div className="flex items-center">
-                <div className="flex items-center justify-center w-10 h-10 bg-purple-100 rounded-lg">
-                  <Users className="w-5 h-5 text-purple-600" />
+                <div className="flex items-center justify-center w-10 h-10 rounded-lg" style={{ backgroundColor: 'var(--accent)' }}>
+                  <Users className="w-5 h-5" style={{ color: 'var(--accent-foreground)' }} />
                 </div>
                 <div className="ml-4">
-                  <p className="text-sm font-medium text-gray-600">Total Followers</p>
-                  <p className="text-2xl font-bold text-gray-900">{formatNumber(totalFollowers)}</p>
+                  <p className="text-sm font-medium" style={{ color: 'var(--muted-foreground)' }}>Total Followers</p>
+                  <p className="text-2xl font-bold" style={{ color: 'var(--foreground)' }}>{formatNumber(totalFollowers)}</p>
                 </div>
               </div>
             </CardContent>
@@ -220,12 +220,12 @@ export default function PlatformsPage() {
           <Card>
             <CardContent className="p-6">
               <div className="flex items-center">
-                <div className="flex items-center justify-center w-10 h-10 bg-orange-100 rounded-lg">
-                  <TrendingUp className="w-5 h-5 text-orange-600" />
+                <div className="flex items-center justify-center w-10 h-10 rounded-lg" style={{ backgroundColor: 'var(--warning)' }}>
+                  <TrendingUp className="w-5 h-5" style={{ color: 'var(--warning-foreground)' }} />
                 </div>
                 <div className="ml-4">
-                  <p className="text-sm font-medium text-gray-600">Growth Rate</p>
-                  <p className="text-2xl font-bold text-gray-900">+5.2%</p>
+                  <p className="text-sm font-medium" style={{ color: 'var(--muted-foreground)' }}>Growth Rate</p>
+                  <p className="text-2xl font-bold" style={{ color: 'var(--foreground)' }}>+5.2%</p>
                 </div>
               </div>
             </CardContent>
